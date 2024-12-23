@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import chapter6.beans.User;
 import chapter6.logging.InitApplication;
 import chapter6.service.UserService;
 
@@ -53,13 +54,18 @@ public class SignUpServlet extends HttpServlet {
 
 	        List<String> errorMessages = new ArrayList<String>();
 
+	        //画面からの入力値はここの引数に格納される
 	        User user = getUser(request);
+	        //バリデーション
 	        if (!isValid(user, errorMessages)) {
 	            request.setAttribute("errorMessages", errorMessages);
 	            request.getRequestDispatcher("signup.jsp").forward(request, response);
 	            return;
 	        }
+	        //DBに登録するためにUserService.javaに処理を移す
 	        new UserService().insert(user);
+	        //SignUpServlet（のdoPost）→TopServlet（のdoGet）→top.jspの順で呼び出される
+	        //コンテキストルート（デフォルトURL）＝index.jsp
 	        response.sendRedirect("./");
 	    }
 
