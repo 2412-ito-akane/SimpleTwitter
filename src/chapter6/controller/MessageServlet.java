@@ -73,7 +73,7 @@ public class MessageServlet extends HttpServlet {
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
 	  	//入力値が不正ならTopに表示させる
-        if (StringUtils.isEmpty(text)) {
+        if (StringUtils.isBlank(text)) {
             errorMessages.add("メッセージを入力してください");
         } else if (140 < text.length()) {
             errorMessages.add("140文字以下で入力してください");

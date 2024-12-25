@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.exception.NoRowsUpdatedRuntimeException;
 import chapter6.exception.SQLRuntimeException;
@@ -40,8 +42,12 @@ public class UserDao {
   	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
           " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
+  	  	//SQLを実行するために必要なオブジェクト（nullで初期化）
           PreparedStatement ps = null;
+
+          //DBのuserテーブルに登録する情報
           try {
+
               StringBuilder sql = new StringBuilder();
               sql.append("INSERT INTO users ( ");
               sql.append("    account, ");
@@ -88,7 +94,6 @@ public class UserDao {
   	  //nullで初期化している
           PreparedStatement ps = null;
 
-        //DBのuserテーブルに登録する情報
           try {
               String sql = "SELECT * FROM users WHERE (account = ? OR email = ?) AND password = ?";
 
@@ -142,12 +147,12 @@ public class UserDao {
                   close(rs);
               }
           }
-          
+
           //selectメソッド
           public User select(Connection connection, int id) {
 
 
-        	    log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+        	    log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         	" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         	    PreparedStatement ps = null;
@@ -179,30 +184,49 @@ public class UserDao {
 
           public void update(Connection connection, User user) {
 
-        	    log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+        	    log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         	" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         	    PreparedStatement ps = null;
         	    try {
         	        StringBuilder sql = new StringBuilder();
+        	        
         	        sql.append("UPDATE users SET ");
         	        sql.append("    account = ?, ");
         	        sql.append("    name = ?, ");
         	        sql.append("    email = ?, ");
-        	        sql.append("    password = ?, ");
         	        sql.append("    description = ?, ");
+        	        
+        	        //パスワードの入力がある場合、ない場合で分岐
+        	        String password = user.getPassword();
+        	        if(!StringUtils.isEmpty(password)) {
+        	        sql.append("    password = ?, ");
         	        sql.append("    updated_date = CURRENT_TIMESTAMP ");
         	        sql.append("WHERE id = ?");
-
+        	        }else {
+        	        	//パスワードの入力がないとき
+            	        sql.append("    updated_date = CURRENT_TIMESTAMP ");
+            	        sql.append("WHERE id = ?");
+        	        }
+        	        
         	        ps = connection.prepareStatement(sql.toString());
 
         	        ps.setString(1, user.getAccount());
         	        ps.setString(2, user.getName());
         	        ps.setString(3, user.getEmail());
-        	        ps.setString(4, user.getPassword());
-        	        ps.setString(5, user.getDescription());
-        	        ps.setInt(6, user.getId());
+        	        ps.setString(4, user.getDescription());
+        	        
+        	      //パスワードの入力がある場合、ない場合で分岐
+        	        if(!StringUtils.isEmpty(password)) {
+        	        	ps.setString(5, user.getPassword());
+            	        ps.setInt(6, user.getId());
+        	        }else {
+        	        	//パスワードの入力がないとき
+        	        	ps.setInt(5, user.getId());
+        	        }
 
+
+        	        //更新成功した数をint countへ
         	        int count = ps.executeUpdate();
         	        if (count == 0) {
         	    		log.log(Level.SEVERE,"更新対象のレコードが存在しません", new NoRowsUpdatedRuntimeException());

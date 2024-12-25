@@ -17,12 +17,15 @@
                 	<a href="login">ログイン</a>
                 	<a href="signup">登録する</a>
             	</c:if>
+
+            	<!-- ログインしていたら出てくる項目 -->
             	<c:if test="${ not empty loginUser }">
             		<a href="./">ホーム</a>
        	 			<a href="setting">設定</a>
         			<a href="logout">ログアウト</a>
     			</c:if>
             </div>
+
             <c:if test="${ not empty loginUser }">
     		<div class="profile">
         		<div class="name"><h2><c:out value="${loginUser.name}" /></h2></div>
