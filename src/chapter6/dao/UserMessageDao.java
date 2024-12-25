@@ -32,9 +32,9 @@ public class UserMessageDao {
 
     }
 
-    public List<UserMessage> select(Connection connection, int num) {
+    public List<UserMessage> select(Connection connection, Integer id, int num) {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         PreparedStatement ps = null;
@@ -50,8 +50,14 @@ public class UserMessageDao {
             sql.append("FROM messages ");
             sql.append("INNER JOIN users ");
             sql.append("ON messages.user_id = users.id ");
-            sql.append("ORDER BY created_date DESC limit " + num);
 
+            //userIdが渡されたとき、そうでないときで絞り込みをするか変える
+            if(!(id == null)) {
+            	//userIdが渡されている場合
+            	sql.append("WHERE user.id = " + id);
+            }
+
+            sql.append(" ORDER BY created_date DESC limit " + num);
             ps = connection.prepareStatement(sql.toString());
 
             ResultSet rs = ps.executeQuery();
@@ -68,7 +74,7 @@ public class UserMessageDao {
     private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         List<UserMessage> messages = new ArrayList<UserMessage>();
