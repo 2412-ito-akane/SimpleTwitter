@@ -120,6 +120,12 @@ public class SettingServlet extends HttpServlet {
 		String name = user.getName();
 		String account = user.getAccount();
 		String email = user.getEmail();
+		int userId = user.getId();
+
+		//Userserviceからメソッドを呼び出すための設定
+        User dupeAccount = new UserService().select(account);
+        //User dupeAccountから取得したIdをintとして扱う
+        int dupeAccountId = dupeAccount.getId();
 
 		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
 			errorMessages.add("名前は20文字以下で入力してください");
@@ -128,6 +134,12 @@ public class SettingServlet extends HttpServlet {
 			errorMessages.add("アカウント名を入力してください");
 		} else if (20 < account.length()) {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
+		} else if (dupeAccount != null) {
+			//accountの重複があった場合
+			 //UserService.selectの結果がnullではないときエラーメッセージ
+        	errorMessages.add("ユーザーが重複しています");
+		} else if (dupeAccountId != userId) {
+			//UserService.selectの結果、idが異なっていた場合
 		}
 
 		if (!StringUtils.isEmpty(email) && (50 < email.length())) {

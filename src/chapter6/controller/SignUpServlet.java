@@ -62,6 +62,10 @@ public class SignUpServlet extends HttpServlet {
 	            request.getRequestDispatcher("signup.jsp").forward(request, response);
 	            return;
 	        }
+	        
+	        //UserServiceに渡す前に重複がないか確認したい
+	        //入力した情報をaccountとしてUserServiceのselectへ
+	        
 	        //DBに登録するためにUserService.javaに処理を移す
 	        new UserService().insert(user);
 	        //SignUpServlet（のdoPost）→TopServlet（のdoGet）→top.jspの順で呼び出される
@@ -99,10 +103,16 @@ public class SignUpServlet extends HttpServlet {
 	            errorMessages.add("名前は20文字以下で入力してください");
 	        }
 
+	        //Userserviceからメソッドを呼び出すための設定
+	        User dupeAccount = new UserService().select(account);
+	        
 	        if (StringUtils.isEmpty(account)) {
 	            errorMessages.add("アカウント名を入力してください");
 	        } else if (20 < account.length()) {
 	            errorMessages.add("アカウント名は20文字以下で入力してください");
+	        } else if (dupeAccount != null) {
+	        	 //UserService.selectの結果がnullではないときエラーメッセージ
+	        	errorMessages.add("ユーザーが重複しています");
 	        }
 
 	        if (StringUtils.isEmpty(password)) {
