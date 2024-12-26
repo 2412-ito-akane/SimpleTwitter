@@ -54,13 +54,17 @@ public class UserMessageDao {
 			sql.append("ON messages.user_id = users.id ");
 
 			//userIdが渡されたとき、そうでないときで絞り込みをするか変える
-			if (!(id == null)) {
+			if (id != null) {
 				//userIdが渡されている場合
-				sql.append("WHERE user_id = " + id + " ");
+				sql.append("WHERE user_id = ? ");
 			}
 
 			sql.append("ORDER BY created_date DESC limit " + num);
 			ps = connection.prepareStatement(sql.toString());
+
+			if(id != null) {
+				ps.setInt(1, id);
+			}
 
 			ResultSet rs = ps.executeQuery();
 			List<UserMessage> messages = toUserMessages(rs);
