@@ -211,7 +211,7 @@ public class UserDao {
 			if (!StringUtils.isBlank(password)) {
 				sql.append("    password = ?, ");
 			}
-			
+
 			sql.append("    description = ?, ");
 			sql.append("    updated_date = CURRENT_TIMESTAMP ");
 			sql.append("WHERE id = ?");
