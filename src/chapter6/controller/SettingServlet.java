@@ -133,8 +133,10 @@ public class SettingServlet extends HttpServlet {
 			errorMessages.add("アカウント名を入力してください");
 		} else if (20 < account.length()) {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
-		} else if (dupeAccount != null && userId != dupeAccount.getId()) {
-			//DBから返ってきたデータがnullでない場合、getIdを行って入力画面のIdと比較する
+		}
+
+		//DBから返ってきたデータがnullでない場合、getId()を行って入力画面のIdと比較する
+		if (dupeAccount != null && userId != dupeAccount.getId()) {
 			//UserService.selectの結果、異なるIdで同じaccount名があった
 			errorMessages.add("すでに存在するアカウントです");
 		}

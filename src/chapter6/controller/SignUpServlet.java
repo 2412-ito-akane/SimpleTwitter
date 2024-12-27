@@ -112,7 +112,9 @@ public class SignUpServlet extends HttpServlet {
 			errorMessages.add("アカウント名を入力してください");
 		} else if (20 < account.length()) {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
-		} else if (dupeAccount != null) {
+		}
+
+		if (dupeAccount != null) {
 			//UserService.selectの結果がnullではないときエラーメッセージ
 			errorMessages.add("すでに存在するアカウントです");
 		}
