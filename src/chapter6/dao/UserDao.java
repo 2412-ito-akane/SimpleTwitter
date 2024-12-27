@@ -136,6 +136,7 @@ public class UserDao {
 		List<User> users = new ArrayList<User>();
 		try {
 			while (rs.next()) {
+				//DBから取り出したデータをBeansにつめる
 				User user = new User();
 				user.setId(rs.getInt("id"));
 				user.setAccount(rs.getString("account"));
@@ -247,7 +248,7 @@ public class UserDao {
 			close(ps);
 		}
 	}
-	
+
 	//accountの重複確認のためのselectメソッド
 	public User select(Connection connection, String account) {
 		//SQLを使用するためのオブジェクト
@@ -255,26 +256,26 @@ public class UserDao {
 		try {
 			String sql = "SELECT * FROM users WHERE account = ?";
 
-	        ps = connection.prepareStatement(sql);
-	        ps.setString(1, account);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, account);
 
-	        ResultSet rs = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();
 
-	        List<User> users = toUsers(rs);
-	        if (users.isEmpty()) {
-	        	//accountがないとき登録される
-	            return null;
-	        } else if (2 <= users.size()) {
-	        	//DB上にすでに2つ存在している場合
-	            throw new IllegalStateException("ユーザーが重複しています");
-	        } else {
-	        	//account名がDB上に1つ存在している場合
-	            return users.get(0);
-	        }
-	    } catch (SQLException e) {
-	        throw new SQLRuntimeException(e);
-	    } finally {
-	        close(ps);
-	    }
+			List<User> users = toUsers(rs);
+			if (users.isEmpty()) {
+				//accountがないときnullを返す
+				return null;
+			} else if (2 <= users.size()) {
+				//DB上にすでに2つ存在している場合
+				throw new IllegalStateException("ユーザーが重複しています");
+			} else {
+				//account名がDB上に1つ存在している場合
+				return users.get(0);
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
 	}
 }

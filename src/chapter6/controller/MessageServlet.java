@@ -38,7 +38,7 @@ public class MessageServlet extends HttpServlet {
 
     }
 
-    //doGetがないのは、入力された情報の登録のみを行うから
+    //doGetがないのは、入力された情報の登録（データの送信要求）のみを行うから
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -167,29 +167,29 @@ public class UserService {
 			close(connection);
 		}
 	}
-	
+
 	//新しくselectメソッド
 	//accountの重複を確認する
 	public User select(String account) {
-		
+
 		Connection connection = null;
 		try {
 			connection = getConnection();
 			//UserDaoのselectメソッドへ渡す
 			User user = new UserDao().select(connection, account);
 			commit(connection);
-			
+
 			//UserDao.selectの結果を返す
 			return user;
 		} catch (RuntimeException e) {
-	        rollback(connection);
-	        throw e;
-	    } catch (Error e) {
-	        rollback(connection);
-	        throw e;
-	    } finally {
-	        close(connection);
-	    }
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			throw e;
+		} finally {
+			close(connection);
+		}
 	}
-	
+
 }

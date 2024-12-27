@@ -123,23 +123,20 @@ public class SettingServlet extends HttpServlet {
 		int userId = user.getId();
 
 		//Userserviceからメソッドを呼び出すための設定
-        User dupeAccount = new UserService().select(account);
-        //User dupeAccountから取得したIdをintとして扱う
-        int dupeAccountId = dupeAccount.getId();
+		User dupeAccount = new UserService().select(account);
 
 		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
 			errorMessages.add("名前は20文字以下で入力してください");
 		}
+
 		if (StringUtils.isEmpty(account)) {
 			errorMessages.add("アカウント名を入力してください");
 		} else if (20 < account.length()) {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
-		} else if (dupeAccount != null) {
-			//accountの重複があった場合
-			 //UserService.selectの結果がnullではないときエラーメッセージ
-        	errorMessages.add("ユーザーが重複しています");
-		} else if (dupeAccountId != userId) {
-			//UserService.selectの結果、idが異なっていた場合
+		} else if (dupeAccount != null && userId != dupeAccount.getId()) {
+			//DBから返ってきたデータがnullでない場合、getIdを行って入力画面のIdと比較する
+			//UserService.selectの結果、異なるIdで同じaccount名があった
+			errorMessages.add("すでに存在するアカウントです");
 		}
 
 		if (!StringUtils.isEmpty(email) && (50 < email.length())) {
