@@ -99,4 +99,105 @@ public class MessageService {
 			close(connection);
 		}
 	}
+
+	//deleteメソッドを追加
+	//DeleteMessageServletから渡されたint idをMessageDaoへ渡す
+	public void delete(int id) {
+		//ログの作成
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		//DBにアクセスするためにgetConnectionを使いたい
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			//MessageDaoのdeleteメソッドへidを渡す
+			new MessageDao().delete(connection, id);
+			commit(connection);
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
+	//editメソッドを追加
+	public Message edit(int id) {
+		//ログの作成
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		//DBにアクセスするためにgetConnectionを使いたい
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			//MessageDaoのeditメソッドへidを渡す
+			Message message = new MessageDao().edit(connection, id);
+			//DBの操作を確立させる
+			commit(connection);
+
+			//Daoからの戻り値をMessageとしてSevletに返す
+			return message;
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+
+	}
+
+	//updateメソッド追加
+	public void update(Message message) {
+		//ログの作成
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		//DBにアクセスするためにgetConnectionを使う
+		//Connectionの初期化
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			//MessageDaoのupdateメソッドへ渡す
+			new MessageDao().update(connection, message);
+			//DBの操作を確立させる
+			commit(connection);
+
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+
+	}
+
 }
