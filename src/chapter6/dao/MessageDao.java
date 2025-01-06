@@ -94,7 +94,6 @@ public class MessageDao {
 			close(ps);
 		}
 
-
 	}
 
 	//editメソッドを追加
@@ -138,7 +137,6 @@ public class MessageDao {
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
 
-
 		Message message = new Message();
 		try {
 			while (rs.next()) {
@@ -157,5 +155,36 @@ public class MessageDao {
 	}
 
 	//updateメソッド追加
-	//MessageServiceから渡されたBeansを使ってmessagesテーブルを更新
+	//MessageServiceから渡されたBeansを使ってmessagesテーブルを更新したい
+	public void update(Connection connection, Message message) {
+		//ログの生成
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		//UPDATE文とWHERE id = ?でmessagesテーブルのtextを更新
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+
+			sql.append("UPDATE users SET ");
+			sql.append("    text = ?, ");
+			sql.append("    updated_date = CURRENT_TIMESTAMP ");
+			sql.append("WHERE id = ?");
+
+			ps = connection.prepareStatement(sql.toString());
+
+			ps.setString(1, message.getText());
+			ps.setInt(2, message.getId());
+
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 }
