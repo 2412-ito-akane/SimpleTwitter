@@ -155,7 +155,7 @@ public class MessageDao {
 	}
 
 	//updateメソッド追加
-	//MessageServiceから渡されたBeansを使ってmessagesテーブルを更新したい
+	//messagesテーブルを更新したい
 	public void update(Connection connection, Message message) {
 		//ログの生成
 		log.info(new Object() {
@@ -168,7 +168,7 @@ public class MessageDao {
 		try {
 			StringBuilder sql = new StringBuilder();
 
-			sql.append("UPDATE users SET ");
+			sql.append("UPDATE messages SET ");
 			sql.append("    text = ?, ");
 			sql.append("    updated_date = CURRENT_TIMESTAMP ");
 			sql.append("WHERE id = ?");
