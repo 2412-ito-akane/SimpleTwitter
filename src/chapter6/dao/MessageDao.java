@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.Message;
 import chapter6.exception.SQLRuntimeException;
 import chapter6.logging.InitApplication;
@@ -116,7 +118,13 @@ public class MessageDao {
 
 			ResultSet rs = ps.executeQuery();
 
+			//存在しないidが渡されたときの処理を分岐したい
 			Message message = toMessage(rs);
+			//ifで分岐する
+			if (StringUtils.isEmpty(message.getText())) {
+				return null;
+			}
+
 			return message;
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {
@@ -138,6 +146,7 @@ public class MessageDao {
 				}.getClass().getEnclosingMethod().getName());
 
 		Message message = new Message();
+
 		try {
 			while (rs.next()) {
 				//DBから取り出したデータをBeansにつめる

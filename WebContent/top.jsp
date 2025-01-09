@@ -80,22 +80,27 @@
 						<span class="name"><c:out value="${message.name}" /></span>
 					</div>
 					<div class="text">
-						<c:out value="${message.text}" />
+						<pre><c:out value="${message.text}" /></pre>
 					</div>
 					<div class="date">
 						<fmt:formatDate value="${message.createdDate}"
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 					<!-- 削除ボタンの作成 -->
-					<form action="deleteMessage" method="post">
-						<input name="id" value="${message.id}" id="id" type="hidden"/>
-						<br /> <input type="submit" value="削除">
-					</form>
-					<!-- 編集ボタンの作成 -->
-					<form action="edit" method="get">
-						<input name="id" value="${message.id}" id="id" type="hidden"/>
-						<br /> <input type="submit" value="編集">
-					</form>
+					<!-- そのアカウントがログインしてるときに出る -->
+					<c:if test="${ not empty loginUser }">
+						<c:if test="${ message.userId == loginUser.id }">
+							<form action="deleteMessage" method="post">
+								<input name="id" value="${message.id}" id="id" type="hidden"/>
+								<br /> <input type="submit" value="削除">
+							</form>
+							<!-- 編集ボタンの作成 -->
+							<form action="edit" method="get">
+								<input name="id" value="${message.id}" id="id" type="hidden"/>
+								<br /> <input type="submit" value="編集">
+							</form>
+						</c:if>
+					</c:if>
 				</div>
 			</c:forEach>
 		</div>
