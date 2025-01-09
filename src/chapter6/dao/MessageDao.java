@@ -98,9 +98,9 @@ public class MessageDao {
 
 	}
 
-	//editメソッドを追加
+	//selectメソッドを追加
 	//messagesテーブルから参照する
-	public Message edit(Connection connection, int id) {
+	public Message select(Connection connection, int id) {
 		//ログの生成
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +

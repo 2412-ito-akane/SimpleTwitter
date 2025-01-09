@@ -56,14 +56,8 @@ public class EditServlet extends HttpServlet {
 		String strId = request.getParameter("id");
 
 		//取得したidが空白かの確認
-		if (StringUtils.isBlank(strId)) {
+		if (StringUtils.isBlank(strId) || !(strId.matches("^[0-9]*$"))) {
 			//空白だったらエラーメッセージ
-			errorMessages.add("不正なパラメータが入力されました");
-			session.setAttribute("errorMessages", errorMessages);
-			response.sendRedirect("./");
-			return;
-		} else if (!(strId.matches("^[0-9]*$"))) {
-			//数字ではなかったらエラーメッセージ
 			errorMessages.add("不正なパラメータが入力されました");
 			session.setAttribute("errorMessages", errorMessages);
 			response.sendRedirect("./");
@@ -75,7 +69,7 @@ public class EditServlet extends HttpServlet {
 
 		//MessageServiceにidを渡す
 		//戻り値Messageを変数messageとして扱う
-		Message message = new MessageService().edit(id);
+		Message message = new MessageService().select(id);
 		//存在しないidのときの処理
 		if (message == null) {
 			//idを問い合わせた結果、nullが返ってきた場合にエラーメッセージ
@@ -113,11 +107,7 @@ public class EditServlet extends HttpServlet {
 		//トップ画面に遷移しない場合
 		HttpSession session = request.getSession();
 		List<String> errorMessages = new ArrayList<String>();
-		if (!isValid(text, errorMessages)) {
-			session.setAttribute("errorMessages", errorMessages);
-			request.getRequestDispatcher("edit.jsp").forward(request, response);
-			return;
-		}
+
 		//messageのtextに詰める↓
 		Message message = new Message();
 		message.setText(text);
@@ -125,7 +115,12 @@ public class EditServlet extends HttpServlet {
 		//idもupdateに渡すためにmessageに詰める
 		message.setId(id);
 
-		//バリデーションチェックを追記
+		if (!isValid(text, errorMessages)) {
+			session.setAttribute("errorMessages", errorMessages);
+			request.setAttribute("text", text);
+			request.getRequestDispatcher("edit.jsp").forward(request, response);
+			return;
+		}
 
 		//取得した情報をMessageServiceに渡す
 		new MessageService().update(message);

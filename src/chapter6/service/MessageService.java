@@ -131,8 +131,8 @@ public class MessageService {
 		}
 	}
 
-	//editメソッドを追加
-	public Message edit(int id) {
+	//selectメソッドを追加
+	public Message select(int id) {
 		//ログの作成
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -144,7 +144,7 @@ public class MessageService {
 		try {
 			connection = getConnection();
 			//MessageDaoのeditメソッドへidを渡す
-			Message message = new MessageDao().edit(connection, id);
+			Message message = new MessageDao().select(connection, id);
 			//DBの操作を確立させる
 			commit(connection);
 
