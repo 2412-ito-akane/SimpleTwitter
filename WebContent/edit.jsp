@@ -29,7 +29,7 @@
 				</div>
 			</c:if>
 
-		<!-- つぶやきの編集テキストエリア -->
+			<!-- つぶやきの編集テキストエリア -->
 			<form action="edit" method="post">
 				<input name="id" value="${editMessage.id}" id="id" type="hidden"/>
 				つぶやき<br />

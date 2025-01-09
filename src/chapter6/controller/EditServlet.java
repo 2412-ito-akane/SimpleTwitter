@@ -117,7 +117,9 @@ public class EditServlet extends HttpServlet {
 
 		if (!isValid(text, errorMessages)) {
 			session.setAttribute("errorMessages", errorMessages);
-			request.setAttribute("text", text);
+			//入力した内容を保持するためにrequestにセットする
+			//edit.jspでは ${editMessage.text} が呼び出されているのでそこにmessageをセットする
+			request.setAttribute("editMessage", message);
 			request.getRequestDispatcher("edit.jsp").forward(request, response);
 			return;
 		}
