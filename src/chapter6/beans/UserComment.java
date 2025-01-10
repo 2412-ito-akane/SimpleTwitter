@@ -3,13 +3,14 @@ package chapter6.beans;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserMessage implements Serializable {
+public class UserComment implements Serializable {
 
 	private int id;
-	private String account;
-	private String name;
-	private int userId;
-	private String text;
+	private String account; //アカウント
+	private String name; //アカウント名
+	private int userId; //user_id
+	private int messageId; //返信先のつぶやきid
+	private String text;//返信内容
 	private Date createdDate;
 
 	//getter,setter
@@ -48,6 +49,15 @@ public class UserMessage implements Serializable {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+
+	//messageId
+		public int getMessageId() {
+			return messageId;
+		}
+
+		public void setMessageId(int messageId) {
+			this.messageId = messageId;
+		}
 
 	//text
 	public String getText() {

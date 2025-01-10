@@ -100,6 +100,33 @@
 						</form>
 					</c:if>
 				</div>
+				<!-- つぶやきの返信テキストエリア -->
+				<div>
+					<form action="comment" method="post">
+						<!-- textareaとinput -->
+						<input name="id" value="${loginUser.id}" id="id" type="hidden"/>
+						<input name="messageId" value="${message.id}" id="messageId" type="hidden"/>
+						返信<br />
+						<textarea name="text" cols="100" rows="5"></textarea>
+						<br /> <input type="submit" value="返信">（140文字まで）
+					</form>
+					<!-- 返信したつぶやきの表示 -->
+					<div class="comments">
+						<c:forEach items="${ comments }" var="comment">
+							<div class="account-name">
+								<span class="account"><c:out value="${comment.account}" /></span>
+								<span class="name"><c:out value="${comment.name}" /></span>
+							</div>
+							<div class="text">
+								<pre><c:out value="${comment.text}" /></pre>
+							</div>
+							<div class="date">
+								<fmt:formatDate value="${comment.createdDate}"
+									pattern="yyyy/MM/dd HH:mm:ss" />
+							</div>
+						</c:forEach>
+					</div>
+				</div>
 			</c:forEach>
 		</div>
 

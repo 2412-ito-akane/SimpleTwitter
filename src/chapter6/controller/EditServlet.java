@@ -105,7 +105,6 @@ public class EditServlet extends HttpServlet {
 
 		//textの内容についてバリデーションチェック
 		//トップ画面に遷移しない場合
-		HttpSession session = request.getSession();
 		List<String> errorMessages = new ArrayList<String>();
 
 		//messageのtextに詰める↓
@@ -116,7 +115,7 @@ public class EditServlet extends HttpServlet {
 		message.setId(id);
 
 		if (!isValid(text, errorMessages)) {
-			session.setAttribute("errorMessages", errorMessages);
+			request.setAttribute("errorMessages", errorMessages);
 			//入力した内容を保持するためにrequestにセットする
 			//edit.jspでは ${editMessage.text} が呼び出されているのでそこにmessageをセットする
 			request.setAttribute("editMessage", message);
