@@ -32,7 +32,7 @@ public class UserCommentDao {
 
 	}
 
-	public List<UserComment> select(Connection connection, Integer id, int num) {
+	public List<UserComment> select(Connection connection, int num) {
 
 		//ログの生成
 		log.info(new Object() {
@@ -55,13 +55,11 @@ public class UserCommentDao {
 			sql.append("FROM comments ");
 			sql.append("INNER JOIN users ");
 			sql.append("ON comments.user_id = users.id ");
-			sql.append("WHERE user_id = ? ");
 
 			//つぶやきの登録順でソートする
 			sql.append("ORDER BY created_date DESC limit " + num);
 
 			ps = connection.prepareStatement(sql.toString());
-			ps.setInt(1, id);
 
 			ResultSet rs = ps.executeQuery();
 			//commentsテーブルとusersテーブルから取得したレコードをListに格納する

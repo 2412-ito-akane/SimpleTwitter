@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.beans.UserComment;
 import chapter6.beans.UserMessage;
@@ -53,12 +55,22 @@ public class TopServlet extends HttpServlet {
 			isShowMessageForm = true;
 		}
 
+		//input type dateから日時指定があったときは、それをサービスへわたす
+		String start = request.getParameter("start");
+		if(StringUtils.isBlank(start)) {
+			start = null;
+		}
+		String end = request.getParameter("end");
+		if(StringUtils.isBlank(end)) {
+			end = null;
+		}
+
 		//userIdをDBから取得してMessageServiceのselectへ
 		String userId = request.getParameter("user_id");
-		List<UserMessage> messages = new MessageService().select(userId);
+		List<UserMessage> messages = new MessageService().select(userId, start, end);
 
 		//commentServiceへidを渡す
-		List<UserComment> comments = new CommentService().select(userId);
+		List<UserComment> comments = new CommentService().select();
 
 		request.setAttribute("messages", messages);
 		request.setAttribute("comments", comments); //つぶやきの返信

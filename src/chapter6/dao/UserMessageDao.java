@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ public class UserMessageDao {
 
 	}
 
-	public List<UserMessage> select(Connection connection, Integer id, int num) {
+	public List<UserMessage> select(Connection connection, Integer id, int num , Timestamp startTimestamp , Timestamp endTimestamp) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -52,18 +53,22 @@ public class UserMessageDao {
 			sql.append("FROM messages ");
 			sql.append("INNER JOIN users ");
 			sql.append("ON messages.user_id = users.id ");
+			//開始日時と終了日時の絞り込みを設定する
+			sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
 
 			//userIdが渡されたとき、そうでないときで絞り込みをするか変える
 			if (id != null) {
 				//userIdが渡されている場合
-				sql.append("WHERE user_id = ? ");
+				sql.append("AND user_id = ? ");
 			}
 
 			sql.append("ORDER BY created_date DESC limit " + num);
 			ps = connection.prepareStatement(sql.toString());
 
+			ps.setTimestamp(1, startTimestamp);
+			ps.setTimestamp(2, endTimestamp);
 			if(id != null) {
-				ps.setInt(1, id);
+				ps.setInt(3, id);
 			}
 
 			ResultSet rs = ps.executeQuery();

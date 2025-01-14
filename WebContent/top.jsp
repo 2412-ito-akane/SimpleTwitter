@@ -43,6 +43,12 @@
 			</div>
 		</c:if>
 
+		<!-- 日付絞り込み -->
+		<form action="index.jsp" method="get">
+			<label for="date">日付:</label>
+			<input name="start" type="date"> ～ <input name="end" type="date"> <input type="submit" value="絞り込み">
+		</form>
+
 		<!-- つぶやき機能 -->
 		<c:if test="${ not empty errorMessages }">
 			<div class="errorMessages">

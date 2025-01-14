@@ -4,6 +4,7 @@ import static chapter6.utils.CloseableUtil.*;
 import static chapter6.utils.DBUtil.*;
 
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,7 +63,7 @@ public class MessageService {
 
 	//selectメソッド
 	//指定したuserIdのつぶやきだけ見えるようにする
-	public List<UserMessage> select(String userId) {
+	public List<UserMessage> select(String userId, String start, String end) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -75,13 +76,34 @@ public class MessageService {
 		try {
 			connection = getConnection();
 
+			Timestamp startTimestamp;
+			Timestamp endTimestamp;
+
+			//日時が指定されたときにDaoへ渡すように分岐する
+			//開始日時についての分岐
+			if(start != null) {
+				String startDate = start + " 00:00:00.000";
+				startTimestamp = Timestamp.valueOf(startDate);
+			} else {
+				String startDate = "2020-01-01 00:00:00.000";
+				startTimestamp = Timestamp.valueOf(startDate);
+			}
+			
+			//終了日時についての分岐
+			if(end != null) {
+				String endDate = end + " 23:59:59";
+				endTimestamp = Timestamp.valueOf(endDate);
+			} else {
+				endTimestamp = new Timestamp(System.currentTimeMillis());
+			}
+
 			Integer id = null;
 			if (!StringUtils.isEmpty(userId)) {
 				//userIdが指定されているならの処理
 				id = Integer.parseInt(userId);
 			}
 
-			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM);
+			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM, startTimestamp, endTimestamp);
 			commit(connection);
 
 			return messages;

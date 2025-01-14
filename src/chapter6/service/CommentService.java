@@ -66,7 +66,7 @@ public class CommentService {
 
 	//selectメソッド
 	//戻り値はUserComment
-	public List<UserComment> select(String userId) {
+	public List<UserComment> select() {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -80,10 +80,9 @@ public class CommentService {
 			connection = getConnection();
 
 			//引数のuserIdをintへ変換する
-			int id = Integer.parseInt(userId);
 
 			//UserCommentDaoへuserIdを渡す
-			List<UserComment> messages = new UserCommentDao().select(connection, id, LIMIT_NUM);
+			List<UserComment> messages = new UserCommentDao().select(connection, LIMIT_NUM);
 			commit(connection);
 
 			return messages;
