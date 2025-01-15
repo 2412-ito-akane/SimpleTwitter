@@ -40,6 +40,7 @@ public class LoginFilter implements Filter {
 			errorMessages.add("ログインをしてください");
 			session.setAttribute("errorMessages", errorMessages);
 			((HttpServletResponse) response).sendRedirect("login");
+			return;
 		}
 	}
 
