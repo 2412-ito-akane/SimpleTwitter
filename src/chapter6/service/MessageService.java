@@ -63,7 +63,7 @@ public class MessageService {
 
 	//selectメソッド
 	//指定したuserIdのつぶやきだけ見えるようにする
-	public List<UserMessage> select(String userId, String start, String end) {
+	public List<UserMessage> select(String userId, String startDate, String endDate) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -81,18 +81,18 @@ public class MessageService {
 
 			//日時が指定されたときにDaoへ渡すように分岐する
 			//開始日時についての分岐
-			if(start != null) {
-				String startDate = start + " 00:00:00.000";
-				startTimestamp = Timestamp.valueOf(startDate);
+			if (startDate != null) {
+				String strStartDate = startDate + " 00:00:00.000";
+				startTimestamp = Timestamp.valueOf(strStartDate);
 			} else {
-				String startDate = "2020-01-01 00:00:00.000";
-				startTimestamp = Timestamp.valueOf(startDate);
+				String strStartDate = "2020-01-01 00:00:00.000";
+				startTimestamp = Timestamp.valueOf(strStartDate);
 			}
-			
+
 			//終了日時についての分岐
-			if(end != null) {
-				String endDate = end + " 23:59:59";
-				endTimestamp = Timestamp.valueOf(endDate);
+			if (endDate != null) {
+				String strEndDate = endDate + " 23:59:59";
+				endTimestamp = Timestamp.valueOf(strEndDate);
 			} else {
 				endTimestamp = new Timestamp(System.currentTimeMillis());
 			}
@@ -103,7 +103,8 @@ public class MessageService {
 				id = Integer.parseInt(userId);
 			}
 
-			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM, startTimestamp, endTimestamp);
+			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM, startTimestamp,
+					endTimestamp);
 			commit(connection);
 
 			return messages;

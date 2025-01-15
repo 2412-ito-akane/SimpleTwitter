@@ -79,8 +79,6 @@ public class CommentService {
 		try {
 			connection = getConnection();
 
-			//引数のuserIdをintへ変換する
-
 			//UserCommentDaoへuserIdを渡す
 			List<UserComment> messages = new UserCommentDao().select(connection, LIMIT_NUM);
 			commit(connection);

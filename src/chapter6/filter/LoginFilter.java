@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import chapter6.beans.User;
 
 //対象になるのはsettingとeditなのでそれを指定する
-@WebFilter(urlPatterns = {"/setting","/edit" })
+@WebFilter(urlPatterns = { "/setting", "/edit" })
 public class LoginFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
@@ -29,7 +29,7 @@ public class LoginFilter implements Filter {
 		//セッション内のログインユーザー情報のみについて取得する
 		User loginUser = (User) session.getAttribute("loginUser");
 		//エラーメッセージのためのList
-        List<String> errorMessages = new ArrayList<String>();
+		List<String> errorMessages = new ArrayList<String>();
 
 		if (loginUser != null) {
 			//ログインしているときの処理
@@ -38,7 +38,7 @@ public class LoginFilter implements Filter {
 			//ログインしていないときログイン画面へ遷移する
 			//エラーメッセージの表示
 			errorMessages.add("ログインをしてください");
-            session.setAttribute("errorMessages", errorMessages);
+			session.setAttribute("errorMessages", errorMessages);
 			((HttpServletResponse) response).sendRedirect("login");
 		}
 	}

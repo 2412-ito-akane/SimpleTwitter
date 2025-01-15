@@ -57,7 +57,7 @@ public class UserCommentDao {
 			sql.append("ON comments.user_id = users.id ");
 
 			//つぶやきの登録順でソートする
-			sql.append("ORDER BY created_date DESC limit " + num);
+			sql.append("ORDER BY created_date ASC limit " + num);
 
 			ps = connection.prepareStatement(sql.toString());
 

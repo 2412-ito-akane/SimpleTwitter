@@ -56,22 +56,25 @@ public class TopServlet extends HttpServlet {
 		}
 
 		//input type dateから日時指定があったときは、それをサービスへわたす
-		String start = request.getParameter("start");
-		if(StringUtils.isBlank(start)) {
-			start = null;
+		String startDate = request.getParameter("startDate");
+		if (StringUtils.isBlank(startDate)) {
+			startDate = null;
 		}
-		String end = request.getParameter("end");
-		if(StringUtils.isBlank(end)) {
-			end = null;
+		String endDate = request.getParameter("endDate");
+		if (StringUtils.isBlank(endDate)) {
+			endDate = null;
 		}
 
 		//userIdをDBから取得してMessageServiceのselectへ
 		String userId = request.getParameter("user_id");
-		List<UserMessage> messages = new MessageService().select(userId, start, end);
+		List<UserMessage> messages = new MessageService().select(userId, startDate, endDate);
 
 		//commentServiceへidを渡す
 		List<UserComment> comments = new CommentService().select();
 
+		//入力した日付を保持するためにrequestにセットする
+		request.setAttribute("startDate", startDate);
+		request.setAttribute("endDate", endDate);
 		request.setAttribute("messages", messages);
 		request.setAttribute("comments", comments); //つぶやきの返信
 		request.setAttribute("isShowMessageForm", isShowMessageForm);
